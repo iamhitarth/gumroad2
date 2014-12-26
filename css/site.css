@@ -1,0 +1,9 @@
+#mainContent {
+  background-color: black;
+  color: #38FE27;
+  width: 1000px;
+  height: 100vh;
+  padding-top: 5px;
+  padding-left: 10px;
+  font-family: Consolas, monaco, monospace;
+}

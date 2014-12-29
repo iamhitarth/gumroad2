@@ -1,20 +1,31 @@
 $( document ).ready(function() {
   var newLetterInterval = 1000;
-  var letterShiftInterval = 100;
+  var shiftLetterInterval = 100;
+  var shiftRightBy = 10;
   var bonusAtScore = 20;
   var bonusInervalDecrease = 0.1;
-  var shiftRightBy = 10;
-  var isGameOver = false;
   var plusScore = 1;
   var minusScore = -1;
-  
-  while(!isGameOver){
-    
-    var newLetterIntervalId = setInterval(function(){
-      
-      $('.gameArea').append("<div>a</div>");
-      
-    }, newLetterInterval);
-    
-  }
+  var isGameOver = false;
+
+  var newLetterIntervalId = setInterval(function(){
+
+    $('.gameArea').append("<div class='gameLetter'>a</div>");
+
+  }, newLetterInterval);
+
+  var shiftLetterIntervalId = setInterval(function(){
+    $('.gameLetter')
+  }, shiftLetterInterval);
+
+  var clearIntervals = function(){
+    clearInterval(newLetterIntervalId);
+    clearInterval(shiftLetterIntervalId);
+  };
+
+  Mousetrap.bind('escape', function() {
+    clearIntervals();
+  });
+
+
 });

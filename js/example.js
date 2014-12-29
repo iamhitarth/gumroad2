@@ -1,6 +1,8 @@
 var lettersList = "abcdefghijklmnopqrstuvwxyz".split("");
 var startingKeyCode = 97;
 var intervalIds = [];
+var numScoreIncremented = 0;
+var newLetterInterval = 1000;
 
 var clearAllIntervals = function(){
   //Go through array of intervals ids and clear them
@@ -20,22 +22,27 @@ var GameComponent = React.createClass({
     //Start generating random letters
     var self = this;
     var newLetterIntervalId = setInterval(function(){
+      //Get the new letter and its matching code
       var index = Math.floor(Math.random() * 25);
       var displayLetter = lettersList[index];
 
+      //Get existing array of letters
       var _letters = self.state.letters;
 
+      //Add new letter on to existing array
       _letters.push({
         displayLetter: displayLetter,
-        keyCode: startingKeyCode + index
+        keyCode: startingKeyCode + index,
+        isVisible: true
       });
 
+      //Set modified array of letters as the new array in state
       self.setState({
         score: self.state.score,
         letters: _letters
       });
 
-    }, 1000);
+    }, newLetterInterval);
 
     //Store interval id in global array for safe removal later
     intervalIds.push(newLetterIntervalId);
@@ -45,23 +52,58 @@ var GameComponent = React.createClass({
 
     //Remove letters if their corresponding key is pressed
     window.addEventListener('keypress', function(e){
-      console.log("Key pressed: " + e.keyCode);
+      var _letters = self.state.letters;
+      var _score = self.state.score;
 
-      var pressedLetter = $('.gameLetter[data-keycode="'+ e.keyCode + '"]');
+      //Find element in DOM using JQuery
+      var pressedLetter = $('.gameLetter[data-keycode="'+ e.keyCode + '"][data-isvisible="true"]');
 
       if(pressedLetter.length == 1){
-        //Remove the letter
-        pressedLetter.remove();
+        //Set visibility to false
+        var reactid = pressedLetter.data('reactid');
+        var index = parseInt(reactid.slice(reactid.indexOf('$')+1), 10);
+        _letters[index].isVisible = false;
+
+        //Hide the letter
+        pressedLetter.data('isvisible', "false");
+        pressedLetter.hide();
 
         //Increment the score
+        _score++;
+        numScoreIncremented++;
 
       }else if(pressedLetter.length == 0){
         //Decrement the score because of wrong keypress
-        
+        _score--;
+      }else{
+        //Hide the older instance of letter
+        //Don't need to worry about sorting because JQuery returns elements in
+        //the same order they are present in the DOM
+        //Set visibility to false
+        var reactid = $(pressedLetter[0]).data('reactid');
+        var index = parseInt(reactid.slice(reactid.indexOf('$')+1), 10);
+        _letters[index].isVisible = false;
+
+        //Hide the letter
+        $(pressedLetter[0]).data('isvisible', "false");
+        $(pressedLetter[0]).hide();
+
+        //Increment the score
+        _score++;
+        numScoreIncremented++;
       }
 
+      //Set modified array of letters and score as new state
+      self.setState({
+        score: _score,
+        letters: _letters
+      });
 
-      //Decrease new letter time interval for every 20 letters
+      //TODO: Decrease new letter creation interval for every 20 points scored
+      if((numScoreIncremented > 1) && (numScoreIncremented % 20 == 0)){
+        console.log(newLetterInterval);
+        newLetterInterval = newLetterInterval * 0.9;
+      }
 
     });
   },
@@ -121,7 +163,8 @@ var LetterComponent = React.createClass({
   },
   render: function(){
     return (
-      <div className='gameLetter' data-keycode={this.props.keyCode} style={this.state.style}>
+      <div className='gameLetter' data-keycode={this.props.keyCode} data-isvisible={this.props.isVisible}
+      style={this.state.style}>
         {this.props.displayLetter}
       </div>
     );
@@ -132,7 +175,8 @@ var GameAreaComponent = React.createClass({
   render: function(){
     var letterComponents = this.props.letters.map(function(letter, index){
       return (
-        <LetterComponent displayLetter={letter.displayLetter} keyCode={letter.keyCode}/>
+        <LetterComponent displayLetter={letter.displayLetter} key={index}
+        keyCode={letter.keyCode} isVisible={letter.isVisible}/>
       );
     });
     return (

@@ -6,4 +6,10 @@
   padding-top: 5px;
   padding-left: 10px;
   font-family: Consolas, monaco, monospace;
+  overflow: hidden;
+}
+
+.btn-primary, .btn-primary:hover {
+  background-color: black;
+  color: #38FE27;
 }

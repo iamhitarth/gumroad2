@@ -10,7 +10,33 @@
 	<div id="mainContent" class="center-block">
 	</div>
 
-	<!-- Modal -->
+	<!-- Start Game Modal -->
+	<div class="modal fade" id="startGameModal" tabindex="-1" role="dialog" aria-labelledby="startGameModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="startGameModalLabel">Welcome!</h4>
+				</div>
+				<div class="modal-body">
+					Welcome to the typing game! Following are the things you need to know:
+					<ul>
+						<li>Typing a letter you see on screen will increase your score by 1.</li>
+						<li>Mistyping a letter will decrease your score by 1.</li>
+						<li>For every 20 letters you get right, new letters will start coming 10% faster.</li>
+						<li>If a letter gets to the far right, the game will be over.</li>
+						<li>If you press "Esc", the game will be over.</li>
+					</ul>
+					Have fun!
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Start Game</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Game Over Modal -->
 	<div class="modal fade" id="gameOverModal" tabindex="-1" role="dialog" aria-labelledby="gameOverModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
